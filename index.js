@@ -14,7 +14,7 @@ app.set('views', path.join(__dirname, '/views'));
 app.get('/', (req, res)=>{
     try {
         return res.render('pages/nickname', {
-            title: 'Registro'
+            title: 'Sala de Bate-Papo'
         });
     } catch (error) {
         return res.status(500).json(error.message);
