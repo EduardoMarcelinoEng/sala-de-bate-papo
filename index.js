@@ -3,7 +3,7 @@ const app = express();
 const http = require('http');
 const { Server } = require('socket.io');
 const path = require('path');
-const port = 3000;
+const PORT = process.env.PORT || 80;
 const moment = require('moment-timezone');
 
 app.use(express.json());
@@ -75,4 +75,4 @@ setInterval(()=>{
     messages = messages.filter(message=>moment(message.createdAt).tz('America/Sao_Paulo').add(1, 'hours') > moment().tz('America/Sao_Paulo'));
 }, 1000);
 
-server.listen(port, ()=>console.log(`Aplicação rodando na porta ${port}`));
+server.listen(PORT, ()=>console.log(`Aplicação rodando na porta ${PORT}`));
