@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <%- include('../partials/head'); %>
+    <title><%= title %></title>
+</head>
+<body>
+    <div class="chat content-center container">
+        <div class="list-of-messages">
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <input type="text" name="message" class="form-control" id="formGroupNickname" placeholder="Digite a sua mensagem">
+                </div>
+                <div class="col-auto">
+                    <input class="btn" value="Enviar" type="submit" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.socket.io/4.4.1/socket.io.min.js" integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
+    <script>
+        let btnSend = document.querySelector(".btn[type='submit']");
+        let targetMessage = document.querySelector("input[name='message']");
+        let listOfMessages = document.getElementsByClassName("list-of-messages")[0];
+        const params = new URLSearchParams(window.location.search);
+        const myNickname = params.get('nickname');
+
+        //let timeCurrent = "";
+
+        const socket = io('', {query: `nickname=${myNickname}`});
+
+        /*socket.on("time", newTime=>{
+            timeCurrent = newTime;
+        });*/
+
+        socket.emit("get-messages", data=>{
+            data.forEach(message=>createElementHTML(message.nickname, message.nickname === myNickname ? "align-row-right" : "align-row-left", moment(message.createdAt).format("HH:mm"), message.message));
+            toPositionFinishScroll();
+        });
+
+        const sendMessage = (event)=>{
+            event.preventDefault();
+            if(!getText()) return false;
+            createElementHTML(myNickname, "align-row-right", moment().format("HH:mm"));
+            toPositionFinishScroll();
+            socket.emit("new-message", getText());
+            targetMessage.value = "";
+        }
+
+        const toPositionFinishScroll = ()=>{
+            listOfMessages.scrollTop = listOfMessages.scrollHeight;
+        }
+
+        btnSend.addEventListener("click", (event)=>{
+            sendMessage(event);
+        });
+
+        targetMessage.addEventListener("keyup", (event)=>{
+            if((event.which || event.keyCode) === 13) sendMessage(event);
+        });
+
+        const isToPositionFinishScroll = ()=>{
+            return listOfMessages.scrollTop >= (listOfMessages.scrollHeight - 1000);
+        }
+
+        socket.on("new-message", data=>{
+
+            createElementHTML(data.nickname, "align-row-left", moment(data.createdAt).format("HH:mm"), data.message);
+            
+            if(isToPositionFinishScroll()) toPositionFinishScroll();
+        });
+
+        const getText = ()=>{
+            return targetMessage.value;
+        }
+
+        socket.on("new-participant", data=>{
+            let h4 = document.createElement('h4');
+
+            h4.classList.add("title");
+
+            h4.innerHTML = `${data.nickname} entrou na sala`;
+
+            document.querySelector(".list-of-messages").appendChild(h4);
+
+            if(isToPositionFinishScroll()) toPositionFinishScroll();
+
+        });
+
+        socket.on("participant-exited", data=>{
+            let h4 = document.createElement('h4');
+
+            h4.classList.add("title");
+
+            h4.innerHTML = `${data.nickname} saiu da sala`;
+
+            document.querySelector(".list-of-messages").appendChild(h4);
+
+            if(isToPositionFinishScroll()) toPositionFinishScroll();
+
+        });
+
+        const createElementHTML = (author, classList, time = timeCurrent, text = getText())=>{
+
+            let div = document.createElement('div');
+
+            div.classList.add(classList);
+
+            div.innerHTML = `
+                <div class="message ${classList==='align-row-right' ? 'my-message' : 'outher-message'}">
+                    <p class="author">${author}</p>
+                    <div class="text-message">
+                        ${text}
+                    </div>
+                    <p class="time">${time}</p>
+                </div>
+            `;
+
+            document.querySelector(".list-of-messages").appendChild(div);
+
+        }
+
+    </script>
+</body>
+</html>
