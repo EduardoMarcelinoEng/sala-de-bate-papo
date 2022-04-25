@@ -1,5 +1,5 @@
 {
-  "name": "chat",
+  "name": "Sala de Bate-Papo",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -7,8 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Eduardo Marcelino",
+  "license": "MIT",
   "dependencies": {
     "ejs": "^3.1.7",
     "express": "^4.17.3",
