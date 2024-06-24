@@ -3,7 +3,7 @@ const app = express();
 const http = require('http');
 const { Server } = require('socket.io');
 const path = require('path');
-const PORT = process.env.PORT || 80;
+const PORT = process.env.PORT || 5500;
 const moment = require('moment-timezone');
 
 app.use(express.json());
