@@ -5,6 +5,7 @@ const { Server } = require('socket.io');
 const path = require('path');
 const PORT = process.env.PORT || 5500;
 const moment = require('moment-timezone');
+const { baseURL } = require(path.resolve('config'));
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '/public')));
@@ -14,7 +15,8 @@ app.set('views', path.join(__dirname, '/views'));
 app.get('/', (req, res)=>{
     try {
         return res.render('pages/nickname', {
-            title: 'Sala de Bate-Papo'
+            title: 'Sala de Bate-Papo',
+            baseURL
         });
     } catch (error) {
         return res.status(500).json(error.message);
@@ -25,7 +27,8 @@ app.get('/chat', (req, res)=>{
     try {
         if(!req.query.nickname) return res.status(301).redirect('/');
         return res.render('pages/chat', {
-            title: 'Chat'
+            title: 'Chat',
+            baseURL
         });
     } catch (error) {
         return res.status(500).json(error.message);

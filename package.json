@@ -14,6 +14,7 @@
   "author": "Eduardo Marcelino",
   "license": "MIT",
   "dependencies": {
+    "dotenv": "^16.4.5",
     "ejs": "^3.1.7",
     "express": "^4.17.3",
     "moment-timezone": "^0.5.34",
