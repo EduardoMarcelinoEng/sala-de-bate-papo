@@ -12,7 +12,7 @@ app.use(express.static(path.join(__dirname, '/public')));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '/views'));
 
-app.get(`${baseURL}/`, (req, res)=>{
+app.get(`/`, (req, res)=>{
     try {
         return res.render('pages/nickname', {
             title: 'Sala de Bate-Papo',
@@ -23,7 +23,7 @@ app.get(`${baseURL}/`, (req, res)=>{
     }
 });
 
-app.get(`${baseURL}/chat`, (req, res)=>{
+app.get(`/chat`, (req, res)=>{
     try {
         if(!req.query.nickname) return res.status(301).redirect('/');
         return res.render('pages/chat', {
