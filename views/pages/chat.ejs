@@ -30,7 +30,7 @@
 
         //let timeCurrent = "";
 
-        const socket = io('', {query: `nickname=${myNickname}`});
+        const socket = io('<%= baseURL %>', {query: `nickname=${myNickname}`});
 
         /*socket.on("time", newTime=>{
             timeCurrent = newTime;
